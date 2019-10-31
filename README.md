@@ -4,5 +4,4 @@
 
 
 * 小程序二维码
-
-[image](https://github.com/Y-zd/WebApp-demo/blob/master/image/login.jpg)
+![image](https://github.com/Y-zd/WebApp-demo/blob/master/image/login.jpg)
