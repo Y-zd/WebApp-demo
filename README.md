@@ -5,4 +5,4 @@
 
 * 小程序二维码
 
-![微信小程序Demo](![image](https://github.com/Y-zd/WebApp-demo/blob/master/image/login.jpg)
+[image](https://github.com/Y-zd/WebApp-demo/blob/master/image/login.jpg)
