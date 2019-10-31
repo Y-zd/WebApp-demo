@@ -3,6 +3,6 @@
 * [开发文档](https://mp.weixin.qq.com/debug/wxadoc/introduction/index.html)
 
 
-* 截图
+* 小程序二维码
 
-![微信小程序官方Demo 截图](https://mp.weixin.qq.com/debug/wxadoc/dev/image/demo.png)
+![微信小程序Demo](![image](https://github.com/Y-zd/WebApp-demo/blob/master/image/login.jpg)
