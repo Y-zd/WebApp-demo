@@ -1,0 +1,8 @@
+<import src="../../../common/head.wxml" />
+<import src="../../../common/foot.wxml" />
+
+<view class="container">
+  <!-- <template is="head" data="{{title: '新建的页面'}}"/> -->
+    <web-view src='https://www.baidu.com'>123</web-view>    
+</view>
+
