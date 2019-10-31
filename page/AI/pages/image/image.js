@@ -26,36 +26,62 @@ Page({
       sourceType: sourceType[this.data.sourceTypeIndex],
       sizeType: sizeType[this.data.sizeTypeIndex],
       success: function (res) {
-        console.log(res)
-        
         that.setData({
           imageList: res.tempFilePaths
         })
 
-        wx.showLoading({
-          title: '翻译中',
-        })
-        wx.uploadFile({
-          url: 'https://tool.yanzhidong.com/ai/AipOrc/basicAccurateGeneral', //仅为示例，非真实的接口地址
-          filePath: res.tempFilePaths[0],
-          name: 'file',
-          success: function (res) {
-            console.log("返回成功的数据:" + res.data) //返回的会是对象，可以用JSON转字符串打印出来方便查看数据  
-            wx.hideLoading()
-            that.setData({
-              text: res.data
-            })
-          },
-          fail: function (res) {
-            console.log("返回失败的数据:" + res.data) //返回的会是对象，可以用JSON转字符串打印出来方便查看数据  
-            wx.hideLoading()
-            that.setData({
-              text: res.data
-            })
+  
+        wx.login({
+          success(res2) {
+            if (res2.code) {
+          
+              wx.uploadFile({
+                url: 'https://tool.yanzhidong.com/ai/AipOrc/Async/basicAccurateGeneral', //仅为示例，非真实的接口地址
+                filePath: res.tempFilePaths[0],
+                name: 'file',
+                formData: {
+                  'jsCode': res2.code,
+                  'fileName': 'test',
+                },
+                success: function (res) {
+                  console.log("返回成功的数据:" + res.data) //返回的会是对象，可以用JSON转字符串打印出来方便查看数据  
 
+                  that.setData({
+                    text: res.data
+                  })
+                },
+                fail: function (res) {
+                  console.log("返回失败的数据:" + res.data) //返回的会是对象，可以用JSON转字符串打印出来方便查看数据  
+                  that.setData({
+                    text: res.data
+                  })
+                }
+              })
+
+
+            } else {
+              console.log('登录失败！' + res.errMsg)
+            }
           }
-
         })
+
+
+        wx.cloud.init()
+        const db = wx.cloud.database()
+
+
+        db.collection('orcReturnMessage').where({
+          openid:'oDnMd5PTu-57CDA1pCeeP2zFhOnA',
+          fileName:'123'
+        }).field({
+          message: true,
+        }).get().then(res => {
+          console.log(res.data)
+        })
+
+
+ 
+  
       }
     })
 
