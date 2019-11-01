@@ -30,30 +30,52 @@ Page({
           imageList: res.tempFilePaths
         })
 
-  
-        wx.login({
+        wx.showLoading({
+          title: '加载中',
+        })
+         wx.login({
           success(res2) {
             if (res2.code) {
-          
+              var time = new Date().getTime()
               wx.uploadFile({
                 url: 'https://tool.yanzhidong.com/ai/AipOrc/Async/basicAccurateGeneral', //仅为示例，非真实的接口地址
                 filePath: res.tempFilePaths[0],
                 name: 'file',
                 formData: {
                   'jsCode': res2.code,
-                  'fileName': 'test',
+                  'fileName': time,
                 },
-                success: function (res) {
-                  console.log("返回成功的数据:" + res.data) //返回的会是对象，可以用JSON转字符串打印出来方便查看数据  
+                success: function (res3) {
+                  var openId = res3.data;
+                  var i=0
+                  wx.cloud.init()
+                  const db = wx.cloud.database()
+                  do {
+                    db.collection('orcReturnMessage').where({
+                      openid: openId,
+                      fileName: time+""
+                    }).field({
+                      message: true,
+                    }).get().then(res => {
+        
+                      if(res.data.length>0){
+                        console.log("$$")
+                        console.log(res) 
 
-                  that.setData({
-                    text: res.data
-                  })
+                    that.setData({
+                        text: res.data[0].message
+                      })
+                        wx.hideLoading()
+                      i++;
+                      }                      
+                    })
+                  }
+                  while (i<0);                 
                 },
-                fail: function (res) {
-                  console.log("返回失败的数据:" + res.data) //返回的会是对象，可以用JSON转字符串打印出来方便查看数据  
+                fail: function (res3) {
+                  console.log("返回失败的数据:" + res3.data) //返回的会是对象，可以用JSON转字符串打印出来方便查看数据  
                   that.setData({
-                    text: res.data
+                    text: res3.data
                   })
                 }
               })
@@ -66,19 +88,10 @@ Page({
         })
 
 
-        wx.cloud.init()
-        const db = wx.cloud.database()
+       
 
 
-        db.collection('orcReturnMessage').where({
-          openid:'oDnMd5PTu-57CDA1pCeeP2zFhOnA',
-          fileName:'123'
-        }).field({
-          message: true,
-        }).get().then(res => {
-          console.log(res.data)
-        })
-
+       
 
  
   
