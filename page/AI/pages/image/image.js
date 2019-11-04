@@ -26,12 +26,11 @@ Page({
       sourceType: sourceType[this.data.sourceTypeIndex],
       sizeType: sizeType[this.data.sizeTypeIndex],
       success: function (res) {
+        wx.showLoading({
+          title: '识别中,请稍后查看',
+        })
         that.setData({
           imageList: res.tempFilePaths
-        })
-
-        wx.showLoading({
-          title: '加载中',
         })
          wx.login({
           success(res2) {
@@ -47,35 +46,34 @@ Page({
                 },
                 success: function (res3) {
                   var openId = res3.data;
-                  var i=0
+                  that.setData({
+                    time: time
+                  })
+                  that.setData({
+                    openid: openId
+                  })
                   wx.cloud.init()
                   const db = wx.cloud.database()
-                  do {
+                 
                     db.collection('orcReturnMessage').where({
                       openid: openId,
                       fileName: time+""
                     }).field({
                       message: true,
                     }).get().then(res => {
-        
+                      wx.hideLoading()
                       if(res.data.length>0){
-                        console.log("$$")
-                        console.log(res) 
-
                     that.setData({
                         text: res.data[0].message
                       })
-                        wx.hideLoading()
-                      i++;
                       }                      
                     })
-                  }
-                  while (i<0);                 
+                  
                 },
                 fail: function (res3) {
-                  console.log("返回失败的数据:" + res3.data) //返回的会是对象，可以用JSON转字符串打印出来方便查看数据  
+                  console.log("返回失败的数据:",res3) //返回的会是对象，可以用JSON转字符串打印出来方便查看数据  
                   that.setData({
-                    text: res3.data
+                    text: res3
                   })
                 }
               })
@@ -86,15 +84,6 @@ Page({
             }
           }
         })
-
-
-       
-
-
-       
-
- 
-  
       }
     })
 
@@ -107,5 +96,35 @@ Page({
       current: current,
       urls: this.data.imageList
     })
+  },
+  clickMe: function (e) {
+    var time = e.currentTarget.dataset.time
+    var openid = e.currentTarget.dataset.openid 
+ 
+    var that = this
+    wx.cloud.init()
+    const db = wx.cloud.database()
+    db.collection('orcReturnMessage').where({
+      openid: openid,
+      fileName: time + ""
+    }).field({
+      message: true,
+    }).get().then(res => {
+
+      if (res.data.length > 0) {
+          that.setData({
+          text: res.data[0].message
+        })
+      }else{
+        wx.showLoading({
+          title: '翻译中,请稍后查看',
+          duration: 2000, 	 //设置显示时间
+        })
+      }
+    })
+
+
+
+
   }
 })

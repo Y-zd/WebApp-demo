@@ -63,8 +63,10 @@
                 <view class="weui-uploader__return">
                 </view>
                 <view class="weui-uploader__return">
+                <button class="mini-btn" type="default" size="mini" bindtap='clickMe' data-time='{{time}}' data-openid='{{openid}}' >查看</button>
                  <view class="text-box" scroll-y="true" scroll-top="{{scrollTop}}">
-        <text>{{text}}</text>
+                <view hidden="true">{{time}}</view>
+        <text selectable='true'> {{text}}</text>
       </view>
                 </view>
               </view>
